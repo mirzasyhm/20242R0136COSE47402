@@ -1,0 +1,18 @@
+2024-11-23 23:07:05,628 INFO:Starting to read Parquet files using pyarrow engine.
+2024-11-23 23:07:05,637 INFO:Successfully read Parquet files.
+2024-11-23 23:07:06,068 INFO:Filtering for item codes: [1, 120, 1593, 1933, 1581]
+2024-11-23 23:07:06,075 INFO:Dropping rows with missing values in essential columns.
+2024-11-23 23:07:06,077 INFO:Converting 'date' to datetime and ensuring correct data types.
+2024-11-23 23:07:06,081 INFO:Grouping by 'date' and 'item_code' to calculate average price.
+2024-11-23 23:07:18,003 INFO:Persisted the grouped DataFrame in memory.
+2024-11-23 23:07:18,316 INFO:Processing item_code 1.
+2024-11-23 23:07:18,651 INFO:Saved processed data for item_code 1 to preprocessed_data\item_1.parquet
+2024-11-23 23:07:18,651 INFO:Processing item_code 120.
+2024-11-23 23:07:18,866 INFO:Saved processed data for item_code 120 to preprocessed_data\item_120.parquet
+2024-11-23 23:07:18,867 INFO:Processing item_code 1593.
+2024-11-23 23:07:19,081 INFO:Saved processed data for item_code 1593 to preprocessed_data\item_1593.parquet
+2024-11-23 23:07:19,081 INFO:Processing item_code 1933.
+2024-11-23 23:07:19,395 INFO:Saved processed data for item_code 1933 to preprocessed_data\item_1933.parquet
+2024-11-23 23:07:19,395 INFO:Processing item_code 1581.
+2024-11-23 23:07:19,611 INFO:Saved processed data for item_code 1581 to preprocessed_data\item_1581.parquet
+2024-11-23 23:07:19,611 INFO:Data preprocessing completed successfully.
