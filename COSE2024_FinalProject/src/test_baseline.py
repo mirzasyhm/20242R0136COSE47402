@@ -1,5 +1,3 @@
-# src/test_baseline.py
-
 import os
 import torch
 import torch.nn as nn
@@ -8,7 +6,7 @@ from torch.utils.data import DataLoader
 from dataset import HatefulMemesDataset
 from transformers import CLIPProcessor
 
-from model import CLIPEncoder, CLIPOnlyClassifier  # Import the baseline classifier
+from model import CLIPEncoder, CLIPOnlyClassifier  
 
 from sklearn.metrics import precision_score, recall_score, f1_score, accuracy_score
 
@@ -39,18 +37,18 @@ def main():
     clip_processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")
 
     # Paths to datasets
-    splits_dir = os.path.join('..', 'datasets', 'splits')  # Directory containing split files
-    test_split_jsonl = os.path.join(splits_dir, 'test_split.jsonl')  # Use the new test split
-    hateful_memes_img_dir = os.path.join('..', 'datasets')  # Update if necessary
+    splits_dir = os.path.join('..', 'datasets', 'splits')  
+    test_split_jsonl = os.path.join(splits_dir, 'test_split.jsonl')  
+    hateful_memes_img_dir = os.path.join('..', 'datasets') 
 
     # Create Dataset instance for testing
     hateful_meme_test_dataset = HatefulMemesDataset(
         jsonl_file=test_split_jsonl,
         img_dir=hateful_memes_img_dir,
         clip_processor=clip_processor,
-        roberta_tokenizer=None,  # Not needed for baseline
+        roberta_tokenizer=None,  
         max_length=128,
-        is_test=False  # Set to False since it has labels
+        is_test=False  
     )
 
     # Create DataLoader for testing
@@ -82,16 +80,16 @@ def main():
             clip_input_ids = batch['clip_input_ids'].to(device)
             clip_attention_mask = batch['clip_attention_mask'].to(device)
             pixel_values = batch['pixel_values'].to(device)
-            labels = batch['label'].to(device).unsqueeze(1)  # Shape: [batch_size, 1]
+            labels = batch['label'].to(device).unsqueeze(1)  
 
             # Pass all inputs to the classifier
             outputs = clip_only_classifier(
                 clip_input_ids,
                 clip_attention_mask,
                 pixel_values
-            )  # Shape: [batch_size, 1]
+            )  
 
-            preds = (outputs >= 0.5).float()  # Shape: [batch_size, 1]
+            preds = (outputs >= 0.5).float()  
 
             correct += (preds == labels).sum().item()
             total += labels.size(0)

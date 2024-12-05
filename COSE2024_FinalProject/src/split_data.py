@@ -1,5 +1,3 @@
-# src/split_data.py
-
 import os
 import json
 from sklearn.model_selection import train_test_split

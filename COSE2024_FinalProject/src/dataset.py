@@ -1,5 +1,3 @@
-# src/dataset.py
-
 import os
 import json
 import pandas as pd
@@ -26,8 +24,6 @@ def read_jsonl(file_path):
 def process_sarcasm_label(label):
     """
     Converts sarcasm labels into binary values.
-    Assuming 'sarcastic' indicates sarcasm and others do not.
-    Adjust this function based on the actual label definitions.
     """
     if label.lower() in ['twisted meaning', 'very twisted']:
         return 1
@@ -42,7 +38,7 @@ class HatefulMemesDataset(Dataset):
             jsonl_file (str): Path to the JSONL file (train.jsonl, val_split.jsonl, test_split.jsonl).
             img_dir (str): Directory where images are stored.
             clip_processor (CLIPProcessor): Processor for CLIP model.
-            roberta_tokenizer (RobertaTokenizer, optional): Tokenizer for RoBERTa model. Defaults to None.
+            roberta_tokenizer (RobertaTokenizer, optional): Tokenizer for RoBERTa model.
             max_length (int): Maximum token length for RoBERTa.
             is_test (bool): Indicates if the dataset is a test set without labels.
         """
@@ -66,8 +62,7 @@ class HatefulMemesDataset(Dataset):
                 - clip_attention_mask: Tensor of attention masks for CLIP.
                 - pixel_values: Tensor of image data for CLIP.
                 - label: Tensor indicating if the meme is hateful (1) or not (0).
-                  (Only if not is_test)
-                - img_path: Path to the image file. (Only if is_test)
+                - img_path: Path to the image file. 
         """
         sample = self.data[idx]
         text = sample.get('text', '')
@@ -76,24 +71,20 @@ class HatefulMemesDataset(Dataset):
         # Load image
         image = Image.open(img_path).convert('RGB')
 
-        # Optionally, perform OCR if text is not reliable
-        # ocr_text = pytesseract.image_to_string(image)
-        # text = ocr_text if not text.strip() else text
-
-        # Prepare inputs for CLIP with max_length=77
+        
         clip_inputs = self.clip_processor(
             text=text,
             images=image,
             return_tensors="pt",
             padding='max_length',
             truncation=True,
-            max_length=77  # CLIP's max sequence length
+            max_length=77  
         )
 
         # Extract CLIP inputs
-        clip_input_ids = clip_inputs['input_ids'].squeeze()            # Shape: (77,)
-        clip_attention_mask = clip_inputs['attention_mask'].squeeze()  # Shape: (77,)
-        pixel_values = clip_inputs['pixel_values'].squeeze()          # Shape: (3, H, W)
+        clip_input_ids = clip_inputs['input_ids'].squeeze()            
+        clip_attention_mask = clip_inputs['attention_mask'].squeeze() 
+        pixel_values = clip_inputs['pixel_values'].squeeze()         
         
         # Ensure consistent tensor sizes
         assert clip_input_ids.size(0) == 77, f"CLIP input_ids size mismatch: expected 77, got {clip_input_ids.size(0)}"
@@ -114,8 +105,8 @@ class HatefulMemesDataset(Dataset):
                 return_tensors='pt',
             )
 
-            roberta_input_ids = roberta_encoding['input_ids'].squeeze()            # Shape: (128,)
-            roberta_attention_mask = roberta_encoding['attention_mask'].squeeze()  # Shape: (128,)
+            roberta_input_ids = roberta_encoding['input_ids'].squeeze()            
+            roberta_attention_mask = roberta_encoding['attention_mask'].squeeze() 
 
             # Ensure consistent tensor sizes
             assert roberta_input_ids.size(0) == self.max_length, f"RoBERTa input_ids size mismatch: expected {self.max_length}, got {roberta_input_ids.size(0)}"
@@ -198,8 +189,8 @@ class SarcasmDataset(Dataset):
             return_tensors='pt',
         )
 
-        input_ids = encoding['input_ids'].squeeze()        # Shape: (max_length,)
-        attention_mask = encoding['attention_mask'].squeeze()  # Shape: (max_length,)
+        input_ids = encoding['input_ids'].squeeze()       
+        attention_mask = encoding['attention_mask'].squeeze()  
 
         return {
             'input_ids': input_ids,

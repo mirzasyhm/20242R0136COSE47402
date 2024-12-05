@@ -1,17 +1,15 @@
-# src/train_baseline.py
-
 import os
 import torch
 import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import DataLoader
 
-import pandas as pd  # Ensure pandas is imported
+import pandas as pd  
 
 from dataset import HatefulMemesDataset
 from transformers import CLIPProcessor
 
-from model import CLIPEncoder, CLIPOnlyClassifier  # Import the baseline classifier
+from model import CLIPEncoder, CLIPOnlyClassifier  
 
 from sklearn.metrics import precision_score, recall_score, f1_score, accuracy_score
 
@@ -42,17 +40,17 @@ def main():
     clip_processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")
 
     # Paths to datasets
-    splits_dir = os.path.join('..', 'datasets', 'splits')  # Directory containing split files
+    splits_dir = os.path.join('..', 'datasets', 'splits') 
     train_split_jsonl = os.path.join(splits_dir, 'train_split.jsonl')
     val_split_jsonl = os.path.join(splits_dir, 'val_split.jsonl')
-    hateful_memes_img_dir = os.path.join('..', 'datasets')  # Update if necessary
+    hateful_memes_img_dir = os.path.join('..', 'datasets')  
 
     # Create Dataset instances
     hateful_meme_train_dataset = HatefulMemesDataset(
         jsonl_file=train_split_jsonl,
         img_dir=hateful_memes_img_dir,
         clip_processor=clip_processor,
-        roberta_tokenizer=None,  # Not needed for baseline
+        roberta_tokenizer=None,  
         max_length=128,
         is_test=False
     )
@@ -61,7 +59,7 @@ def main():
         jsonl_file=val_split_jsonl,
         img_dir=hateful_memes_img_dir,
         clip_processor=clip_processor,
-        roberta_tokenizer=None,  # Not needed for baseline
+        roberta_tokenizer=None,  
         max_length=128,
         is_test=False
     )
@@ -83,7 +81,7 @@ def main():
 
     # Initialize CLIP Encoder
     clip_encoder = CLIPEncoder().to(device)
-    clip_encoder.eval()  # Assuming CLIP is pretrained and not fine-tuned here
+    clip_encoder.eval() 
 
     # Initialize the CLIP-Only Classifier
     clip_only_classifier = CLIPOnlyClassifier(clip_encoder).to(device)
@@ -102,7 +100,7 @@ def main():
             clip_input_ids = batch['clip_input_ids'].to(device)
             clip_attention_mask = batch['clip_attention_mask'].to(device)
             pixel_values = batch['pixel_values'].to(device)
-            labels = batch['label'].to(device).unsqueeze(1)  # Shape: [batch_size, 1]
+            labels = batch['label'].to(device).unsqueeze(1)  
 
             optimizer_classifier.zero_grad()
             outputs = clip_only_classifier(
@@ -131,7 +129,7 @@ def main():
                 clip_input_ids = batch['clip_input_ids'].to(device)
                 clip_attention_mask = batch['clip_attention_mask'].to(device)
                 pixel_values = batch['pixel_values'].to(device)
-                labels = batch['label'].to(device).unsqueeze(1)  # Shape: [batch_size, 1]
+                labels = batch['label'].to(device).unsqueeze(1)  
 
                 outputs = clip_only_classifier(
                     clip_input_ids,
@@ -152,7 +150,7 @@ def main():
         print(f"Validation - Epoch {epoch+1}/{epochs_classifier} | Accuracy: {accuracy:.4f} | Precision: {precision:.4f} | Recall: {recall:.4f} | F1-Score: {f1:.4f}\n")
 
     # Save the trained Baseline Classifier
-    os.makedirs('models', exist_ok=True)  # Ensure the models directory exists
+    os.makedirs('models', exist_ok=True)  
     torch.save(clip_only_classifier.state_dict(), 'models/clip_only_classifier.pth')
     print("Baseline CLIP-Only Classifier trained and saved.\n")
 

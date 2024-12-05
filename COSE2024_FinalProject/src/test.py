@@ -1,5 +1,3 @@
-# src/test.py
-
 import os
 import torch
 import torch.nn as nn
@@ -8,7 +6,7 @@ from torch.utils.data import DataLoader
 from dataset import HatefulMemesDataset
 from transformers import CLIPProcessor, RobertaTokenizer
 
-from model import CLIPEncoder, RoBERTaSarcasmDetector, HatefulMemeClassifier  # Ensure these are correctly defined
+from model import CLIPEncoder, RoBERTaSarcasmDetector, HatefulMemeClassifier  
 
 from sklearn.metrics import precision_score, recall_score, f1_score, accuracy_score
 
@@ -22,9 +20,9 @@ def main():
     roberta_tokenizer = RobertaTokenizer.from_pretrained('roberta-base')
 
     # Paths to datasets
-    splits_dir = os.path.join('..', 'datasets', 'splits')  # Directory containing split files
-    test_split_jsonl = os.path.join(splits_dir, 'test_split.jsonl')  # Use the new test split
-    hateful_memes_img_dir = os.path.join('..', 'datasets')  # Update if necessary
+    splits_dir = os.path.join('..', 'datasets', 'splits') 
+    test_split_jsonl = os.path.join(splits_dir, 'test_split.jsonl')  
+    hateful_memes_img_dir = os.path.join('..', 'datasets')  
 
     # Create Dataset instance for testing
     hateful_meme_test_dataset = HatefulMemesDataset(
@@ -33,7 +31,7 @@ def main():
         clip_processor=clip_processor,
         roberta_tokenizer=roberta_tokenizer,
         max_length=128,
-        is_test=False  # Set to False since it has labels
+        is_test=False  
     )
 
     # Create DataLoader for testing
@@ -71,7 +69,7 @@ def main():
             clip_input_ids = batch['clip_input_ids'].to(device)
             clip_attention_mask = batch['clip_attention_mask'].to(device)
             pixel_values = batch['pixel_values'].to(device)
-            labels = batch['label'].to(device).unsqueeze(1)  # Shape: [batch_size, 1]
+            labels = batch['label'].to(device).unsqueeze(1)  
 
             # Pass all inputs to the classifier
             outputs = classifier(
@@ -80,9 +78,9 @@ def main():
                 clip_input_ids,
                 clip_attention_mask,
                 pixel_values
-            )  # Shape: [batch_size, 1]
+            )  
 
-            preds = (outputs >= 0.5).float()  # Shape: [batch_size, 1]
+            preds = (outputs >= 0.5).float() 
 
             correct += (preds == labels).sum().item()
             total += labels.size(0)
@@ -99,5 +97,5 @@ def main():
     print(f"Test Set Evaluation | Accuracy: {accuracy:.4f} | Precision: {precision:.4f} | Recall: {recall:.4f} | F1-Score: {f1:.4f}")
 
 if __name__ == "__main__":
-    import pandas as pd  # Import here to avoid issues if running dataset.py directly
+    import pandas as pd  
     main()
