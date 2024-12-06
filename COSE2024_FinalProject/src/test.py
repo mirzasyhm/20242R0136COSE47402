@@ -6,7 +6,7 @@ from torch.utils.data import DataLoader
 from dataset import HatefulMemesDataset
 from transformers import CLIPProcessor, RobertaTokenizer
 
-from model import CLIPEncoder, RoBERTaSarcasmDetector, HatefulMemeClassifier  
+from model import CLIPEncoder, RoBERTaSarcasmDetector, SARCMeme  
 
 from sklearn.metrics import precision_score, recall_score, f1_score, accuracy_score
 
@@ -51,7 +51,7 @@ def main():
     sarcasm_detector.eval()
 
     # Initialize the Hateful Meme Classifier
-    classifier = HatefulMemeClassifier(clip_encoder, sarcasm_detector).to(device)
+    classifier = SARCMeme(clip_encoder, sarcasm_detector).to(device)
     classifier.load_state_dict(torch.load('models/hateful_meme_classifier.pth', map_location=device))
     classifier.eval()
 

@@ -9,7 +9,7 @@ import pandas as pd
 from dataset import HatefulMemesDataset, SarcasmDataset
 from transformers import CLIPProcessor, RobertaTokenizer
 
-from model import CLIPEncoder, RoBERTaSarcasmDetector, HatefulMemeClassifier  
+from model import CLIPEncoder, RoBERTaSarcasmDetector, SARCMeme  
 
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import precision_score, recall_score, f1_score
@@ -160,7 +160,7 @@ def main():
     sarcasm_detector.eval()
 
     # Initialize the Hateful Meme Classifier
-    classifier = HatefulMemeClassifier(clip_encoder, sarcasm_detector).to(device)
+    classifier = SARCMeme(clip_encoder, sarcasm_detector).to(device)
 
     # Define loss and optimizer for the classifier
     criterion_classifier = nn.BCELoss()

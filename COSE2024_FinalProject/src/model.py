@@ -74,9 +74,9 @@ class RoBERTaSarcasmDetector(nn.Module):
         output = torch.sigmoid(logits)                  
         return output.view(-1, 1)                       
 
-class HatefulMemeClassifier(nn.Module):
+class SARCMeme(nn.Module):
     def __init__(self, clip_encoder, roberta_sarcasm_detector, hidden_size=512):
-        super(HatefulMemeClassifier, self).__init__()
+        super(SARCMeme, self).__init__()
         self.clip_encoder = clip_encoder
         self.roberta_sarcasm_detector = roberta_sarcasm_detector
 
