@@ -126,7 +126,7 @@ def main():
     optimizer_sarcasm = optim.AdamW(sarcasm_detector.parameters(), lr=2e-5)
 
     # Training loop for Sarcasm Detector
-    epochs_sarcasm = 3
+    epochs_sarcasm = 50
     for epoch in range(epochs_sarcasm):
         total_loss = 0
         for batch in sarcasm_train_loader:
