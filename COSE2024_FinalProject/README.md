@@ -10,7 +10,7 @@ SARCMeme is a novel multimodal deep learning framework designed for hateful meme
 - Look at requirements.txt
 
 ---
-### **Usage*
+### **Usage**
 Two ways:
 First
 1.  Download Evaluate.ipynb and run all cell on Colab or Jupyter Notebook
